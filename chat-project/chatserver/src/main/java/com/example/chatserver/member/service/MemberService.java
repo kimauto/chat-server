@@ -1,6 +1,7 @@
 package com.example.chatserver.member.service;
 
 import com.example.chatserver.member.domain.Member;
+import com.example.chatserver.member.dto.MemberListResDto;
 import com.example.chatserver.member.dto.MemberLoginReqDto;
 import com.example.chatserver.member.dto.MemberSaveReqDto;
 import com.example.chatserver.member.repository.MemberRepository;
@@ -8,6 +9,9 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -43,5 +47,18 @@ public class MemberService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
         return member;
+    }
+
+    public List<MemberListResDto> findAll(){
+        List<Member> members = memberRepository.findAll();
+        List<MemberListResDto> memberListResDtos = new ArrayList<>();
+        for (Member m : members){
+            MemberListResDto memberListResDto = new MemberListResDto();
+            memberListResDto.setId(m.getId());
+            memberListResDto.setEmail(m.getEmail());
+            memberListResDto.setName(m.getName());
+            memberListResDtos.add(memberListResDto);
+        }
+        return memberListResDtos;
     }
 }
